@@ -3,22 +3,42 @@
     <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-input
         filled
-        v-model="name"
-        label="Your name *"
-        hint="Name and surname"
+        v-model="username"
+        label="Your username *"
+        hint="Username"
         lazy-rules
         :rules="[(val) => (val && val.length > 0) || 'Please type something']"
       />
 
       <q-input
         filled
-        type="number"
-        v-model="age"
-        label="Your age *"
-        lazy-rules
+        type="email"
+        v-model="email"
+        label="Your email *"
         :rules="[
-          (val) => (val !== null && val !== '') || 'Please type your age',
-          (val) => (val > 0 && val < 100) || 'Please type a real age',
+          (val) => (val !== null && val !== '') || 'Please type your email',
+        ]"
+      />
+      <q-input
+        filled
+        type="password"
+        v-model="password"
+        label="Your password *"
+        hint="More than 8 character"
+        :rules="[
+          (val) => (val !== null && val !== '') || 'Please type a password',
+          (val) => val.length > 8 || 'Please type more than 8 character',
+        ]"
+      />
+      <q-input
+        filled
+        type="password"
+        v-model="passwordAA"
+        label="Your passwordAA *"
+        hint="More than 8 character"
+        :rules="[
+          (val) => (val !== null && val !== '') || 'Please type a password',
+          (val) => val.length > 8 || 'Please type more than 8 character',
         ]"
       />
 
@@ -45,13 +65,17 @@ export default {
   setup() {
     const $q = useQuasar();
 
-    const name = ref(null);
-    const age = ref(null);
+    const username = ref(null);
+    const email = ref(null);
+    const password = ref(null);
+    const passwordAA = ref(null);
     const accept = ref(false);
 
     return {
-      name,
-      age,
+      username,
+      email,
+      password,
+      passwordAA,
       accept,
 
       onSubmit() {
@@ -73,8 +97,10 @@ export default {
       },
 
       onReset() {
-        name.value = null;
-        age.value = null;
+        username.value = null;
+        email.value = null;
+        password.value = null;
+        passwordAA.value = null;
         accept.value = false;
       },
     };
