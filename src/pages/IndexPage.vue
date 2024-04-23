@@ -99,6 +99,7 @@ export default {
 
     //fetch data for Signup
     const fetchSignup = () => {
+      isLoading.value = true;
       fetch(`https://gestioncab-back.vercel.app/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -142,7 +143,6 @@ export default {
 
       //onSubmit function
       onSubmit() {
-        isLoading.value = true;
         if (accept.value !== true) {
           $q.notify({
             color: "red-5",
