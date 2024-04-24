@@ -102,7 +102,7 @@ const isLoading = ref(false);
 
 const checkToken = () => {
   const token = $q.cookies.has("token_cookie");
-  token ? router.push("/home") : router.push("/");
+  token ? router.push("/home") : router.push("/signup");
 };
 onBeforeMount(() => {
   checkToken();
