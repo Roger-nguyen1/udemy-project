@@ -49,6 +49,7 @@
 
       <div class="flex justify-center items-center mb-10">
         <q-btn label="Submit" type="submit" color="primary" />
+        <q-btn @click="toSignup" class="ml-2" label="Sign UP" color="primary" />
         <q-btn
           label="Reset"
           type="reset"
@@ -82,6 +83,10 @@ const checkToken = () => {
 onBeforeMount(() => {
   checkToken();
 });
+
+const toSignup = () => {
+  router.push("/signup");
+};
 
 const setToken = (token) => {
   $q.cookies.set("token_cookie", token, { expires: "1d", sameSite: "Strict" });

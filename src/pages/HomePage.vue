@@ -1,5 +1,5 @@
 <template>
-  <h1 class="font-bold text-center text-[42px]">Welcome to Home page</h1>
+  <h1 class="font-bold text-center text-[42px]">Welcome to the Home page</h1>
 </template>
 
 <script setup>

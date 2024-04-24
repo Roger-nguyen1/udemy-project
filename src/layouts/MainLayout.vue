@@ -27,7 +27,12 @@
           v-bind="link"
         />
       </q-list>
-      <q-btn label="Disconnect" color="primary" @click="customBtn" />
+      <q-btn
+        class="ml-8 mt-5"
+        label="Disconnect"
+        color="primary"
+        @click="customBtn"
+      />
     </q-drawer>
 
     <q-page-container>
