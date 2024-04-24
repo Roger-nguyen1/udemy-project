@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title> Udemy Vue Project With Quasar </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
@@ -27,6 +27,7 @@
           v-bind="link"
         />
       </q-list>
+      <q-btn label="Disconnect" color="primary" @click="customBtn" />
     </q-drawer>
 
     <q-page-container>
@@ -36,12 +37,43 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import EssentialLink from "components/EssentialLink.vue";
 
 defineOptions({
   name: "MainLayout",
 });
+
+const $q = useQuasar();
+const router = useRouter();
+
+function customBtn() {
+  $q.dialog({
+    title: "Disconnect",
+    message: "Would you like to disconnect?",
+    ok: {
+      push: true,
+    },
+    cancel: {
+      push: true,
+      color: "negative",
+    },
+    persistent: true,
+  })
+    .onOk(() => {
+      console.log(">>>> OK");
+      $q.cookies.remove("token_cookie");
+      router.push("/");
+    })
+    .onCancel(() => {
+      // console.log('>>>> Cancel')
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    });
+}
 
 const linksList = [
   {

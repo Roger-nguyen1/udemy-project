@@ -82,95 +82,105 @@
     </q-form>
   </div>
 </template>
-<script>
+<script setup>
 import { useQuasar } from "quasar";
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
 
-export default {
-  setup() {
-    const $q = useQuasar();
+defineOptions({
+  name: "SignUpPage",
+});
 
-    const username = ref(null);
-    const email = ref(null);
-    const password = ref(null);
-    const passwordAA = ref(null);
-    const accept = ref(false);
-    const isLoading = ref(false);
+const router = useRouter();
+const $q = useQuasar();
+const username = ref(null);
+const email = ref(null);
+const password = ref(null);
+const passwordAA = ref(null);
+const accept = ref(false);
+const isLoading = ref(false);
 
-    //fetch data for Signup
-    const fetchSignup = () => {
-      isLoading.value = true;
-      fetch(`https://gestioncab-back.vercel.app/users/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username.value,
-          email: email.value,
-          password: password.value,
-          passwordAA: passwordAA.value,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.result) {
-            console.log("data sent to database");
-            $q.notify({
-              color: "green-4",
-              textColor: "white",
-              icon: "cloud_done",
-              message: "Registration successful!",
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Signup Error :", error);
-          $q.notify({
-            color: "red-5",
-            textColor: "white",
-            icon: "warning",
-            message: "An error occurred during registration",
-          });
+const checkToken = () => {
+  const token = $q.cookies.has("token_cookie");
+  token ? router.push("/home") : router.push("/");
+};
+onBeforeMount(() => {
+  checkToken();
+});
+
+const setToken = (token) => {
+  $q.cookies.set("token_cookie", token, { expires: "1d", sameSite: "Strict" });
+};
+
+//fetch data for Signup
+const fetchSignup = () => {
+  isLoading.value = true;
+  fetch(`https://gestioncab-back.vercel.app/users/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: username.value,
+      email: email.value,
+      password: password.value,
+      passwordAA: passwordAA.value,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.result) {
+        setToken(data.token);
+        $q.notify({
+          color: "green-4",
+          textColor: "white",
+          icon: "cloud_done",
+          message: "Registration successful!",
         });
-    };
 
-    return {
-      username,
-      email,
-      password,
-      passwordAA,
-      accept,
-      isLoading,
-
-      //onSubmit function
-      onSubmit() {
-        if (accept.value !== true) {
-          $q.notify({
-            color: "red-5",
-            textColor: "white",
-            icon: "warning",
-            message: "You need to accept the license and terms first",
-          });
-          isLoading.value = false;
-        } else {
-          $q.notify({
-            color: "green-4",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "Submitted",
-          });
-          fetchSignup();
-          isLoading.value = false;
-        }
-      },
-
-      onReset() {
-        username.value = null;
-        email.value = null;
-        password.value = null;
-        passwordAA.value = null;
-        accept.value = false;
-      },
-    };
-  },
+        const verifyToken = $q.cookies.has("token_cookie");
+        verifyToken && router.push("/home");
+      }
+    })
+    .catch((error) => {
+      console.error("Signup Error :", error);
+      $q.notify({
+        color: "red-5",
+        textColor: "white",
+        icon: "warning",
+        message: "An error occurred during registration. Please retry",
+      });
+    })
+    .finally(() => {
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 1000);
+    });
+};
+//onSubmit function
+const onSubmit = () => {
+  if (accept.value !== true) {
+    $q.notify({
+      color: "red-5",
+      textColor: "white",
+      icon: "warning",
+      message: "You need to accept the license and terms first",
+    });
+    isLoading.value = false;
+  } else {
+    $q.notify({
+      color: "green-4",
+      textColor: "white",
+      icon: "cloud_done",
+      message: "Submitted",
+    });
+    fetchSignup();
+  }
+};
+//onReset function
+const onReset = () => {
+  username.value = null;
+  email.value = null;
+  password.value = null;
+  passwordAA.value = null;
+  accept.value = false;
 };
 </script>
