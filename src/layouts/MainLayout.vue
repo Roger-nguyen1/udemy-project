@@ -27,7 +27,9 @@
           v-bind="link"
         />
       </q-list>
+      <p>> {{ isToken }}</p>
       <q-btn
+        v-if="isToken"
         class="ml-8 mt-5"
         label="Disconnect"
         color="primary"
@@ -43,7 +45,7 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import EssentialLink from "components/EssentialLink.vue";
 
@@ -53,6 +55,15 @@ defineOptions({
 
 const $q = useQuasar();
 const router = useRouter();
+const isToken = ref(true);
+
+const checkToken = () => {
+  const token = $q.cookies.has("token_cookie");
+  isToken.value = token ? true : false;
+};
+onMounted(() => {
+  checkToken();
+});
 
 function customBtn() {
   $q.dialog({
